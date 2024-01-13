@@ -5,14 +5,17 @@ import { useState } from "react";
 import Button from "../Button/Button";
 import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
-function SignupSignin() {
+function SignupSignin({ login, handleToggle }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function signupWithEmail() {
     setLoading(true); // Button will be enabled
@@ -40,6 +43,8 @@ function SignupSignin() {
             setPassword("");
             setConfirmPassword("");
 
+            navigate("/dashboard"); // after signup navigating to dashboard page
+
             createDoc(user);
           })
           .catch((error) => {
@@ -60,9 +65,33 @@ function SignupSignin() {
     }
   }
 
-  function createDoc(user) {
+  async function createDoc(user) {
     // Make sure that the doc with the uid dosen't exitst
     // Create a doc
+    console.log("inside createDoc!");
+
+    if (!user) return;
+
+    const userRef = doc(db, "users", user.uid);
+    const userData = await getDoc(userRef);
+
+    if (!userData.exists()) {
+      // Checking id user already exists
+      try {
+        await setDoc(doc(db, "users", user.uid), {
+          // creating new DOC for the user if not existed
+          name: user.displayName ? user.displayName : name,
+          email: user.email,
+          photoURL: user.photoURL ? user.photoURL : "",
+          createdAt: new Date(),
+        });
+        toast.success("User DOC created successfuly!")
+      } catch (e) {
+        toast.error(e.message);
+      }
+    } else {
+      toast.error("User DOC already exists!");
+    }
   }
 
   return (
@@ -101,16 +130,31 @@ function SignupSignin() {
         />
         <Button
           disabled={loading}
-          text={loading ? "Loading..." : "Signup Using Google"}
+          text={loading ? "Loading..." : "Signup Using Email & Password"}
           onClick={signupWithEmail}
         />
-        <p style={{ textAlign: "center" }}>or</p>
+        <p style={{ textAlign: "center", fontSize: "0.8rem", fontWeight: 400 }}>
+          or
+        </p>
         <Button
           disabled={loading}
           text={loading ? "Loading..." : "Signup Using Google"}
           blue={true}
           // onClick={signupWithGoogle}
         />
+        <p style={{ textAlign: "center", fontSize: "0.8rem", fontWeight: 400 }}>
+          Or Have An Account Already?{" "}
+          <span
+            style={{ color: "var(--theme)", cursor: "pointer" }}
+            onClick={() => {
+              if (!login) {
+                handleToggle(true);
+              }
+            }}
+          >
+            Click Here
+          </span>
+        </p>
       </form>
     </div>
   );
