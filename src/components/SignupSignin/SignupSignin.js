@@ -8,6 +8,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 function SignupSignin({ login, handleToggle }) {
   const [name, setName] = useState("");
@@ -16,6 +17,7 @@ function SignupSignin({ login, handleToggle }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
 
   function signupWithEmail() {
     setLoading(true); // Button will be enabled
@@ -33,7 +35,7 @@ function SignupSignin({ login, handleToggle }) {
             // Signed up
             const user = userCredential.user;
             console.log("User>>>", user);
-            toast.success("User created");
+            toast.success("User signed in successfuly");
             // ...
 
             setLoading(false); // Button will be disabled
@@ -64,6 +66,36 @@ function SignupSignin({ login, handleToggle }) {
       setLoading(false); // Button will be disabled
     }
   }
+  function authenticateWithGoogle() {
+    setLoading(true); // Button will be enabled
+    try {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          console.log(user);
+          createDoc(user);
+          toast.success("User signed in successfuly");
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+          setLoading(false); // Button will be disabled
+          navigate("/dashboard"); // after login navigating to dashboard page
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toast.error(errorMessage);
+          setLoading(false); // Button will be disabled
+        });
+    } catch (e) {
+      toast.error(e.message);
+      setLoading(false); // Button will be disabled
+    }
+  }
 
   async function createDoc(user) {
     // Make sure that the doc with the uid dosen't exitst
@@ -85,7 +117,7 @@ function SignupSignin({ login, handleToggle }) {
           photoURL: user.photoURL ? user.photoURL : "",
           createdAt: new Date(),
         });
-        toast.success("User DOC created successfuly!")
+        toast.success("User DOC created successfuly!");
       } catch (e) {
         toast.error(e.message);
       }
@@ -140,7 +172,7 @@ function SignupSignin({ login, handleToggle }) {
           disabled={loading}
           text={loading ? "Loading..." : "Signup Using Google"}
           blue={true}
-          // onClick={signupWithGoogle}
+          onClick={authenticateWithGoogle}
         />
         <p style={{ textAlign: "center", fontSize: "0.8rem", fontWeight: 400 }}>
           Or Have An Account Already?{" "}

@@ -7,12 +7,14 @@ import { toast } from "react-toastify";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 function Login({ login, handleToggle }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
 
   function loginUsingEmail() {
     setLoading(true); // Button will be enabled
@@ -42,6 +44,35 @@ function Login({ login, handleToggle }) {
         });
     } else {
       toast.error("All fields are mandatory");
+      setLoading(false); // Button will be disabled
+    }
+  }
+  function authenticateWithGoogle() {
+    setLoading(true); // Button will be enabled
+    try {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          console.log(user);
+          toast.success("User signed in successfuly");
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+          setLoading(false); // Button will be disabled
+          navigate("/dashboard"); // after login navigating to dashboard page
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toast.error(errorMessage);
+          setLoading(false); // Button will be disabled
+        });
+    } catch (e) {
+      toast.error(e.message);
       setLoading(false); // Button will be disabled
     }
   }
@@ -78,7 +109,7 @@ function Login({ login, handleToggle }) {
           disabled={loading}
           text={loading ? "Loading..." : "Login Using Google"}
           blue={true}
-          // onClick={loginUsingGoogle}
+          onClick={authenticateWithGoogle}
         />
         <p style={{ textAlign: "center", fontSize: "0.8rem", fontWeight: 400 }}>
           Or Have An Account Already?{" "}
