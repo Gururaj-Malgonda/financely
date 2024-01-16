@@ -17,7 +17,7 @@ function Header() {
   }, [user, loading]);
 
   function logoutFnc() {
-    alert("You have successfully logged out");
+    // alert("You have successfully logged out");
     signOut(auth)
       .then(() => {
         // Sign-out successful.
