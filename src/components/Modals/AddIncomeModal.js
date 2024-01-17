@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Modal, DatePicker, Form, Input, Select } from "antd";
-// import Button from "../Button/Button";
 
 function AddIncomeModal({ isIncomeModalVisible, handleIncomeModal, onFinish }) {
   const [form] = Form.useForm();
@@ -15,7 +14,7 @@ function AddIncomeModal({ isIncomeModalVisible, handleIncomeModal, onFinish }) {
     >
       <Form
         form={form}
-        variant="filled"
+        layout="vertical"
         onFinish={(values) => {
           onFinish(values, "income");
           form.resetFields();

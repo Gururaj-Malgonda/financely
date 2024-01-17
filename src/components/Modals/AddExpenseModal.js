@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Modal, DatePicker, Form, Input, Select } from "antd";
-// import Button from "../Button/Button";
 
 function AddExpenseModal({
   isExpenseModalVisible,
@@ -28,7 +27,7 @@ function AddExpenseModal({
         <Form.Item
           style={{ fontWeight: 600 }}
           label="Name"
-          name="input"
+          name="name"
           rules={[
             {
               required: true,
