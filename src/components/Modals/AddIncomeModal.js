@@ -1,5 +1,13 @@
 import React from "react";
-import { Button, Modal, DatePicker, Form, Input, Select } from "antd";
+import {
+  Button,
+  Modal,
+  DatePicker,
+  Form,
+  Input,
+  Select,
+  InputNumber,
+} from "antd";
 
 function AddIncomeModal({ isIncomeModalVisible, handleIncomeModal, onFinish }) {
   const [form] = Form.useForm();
@@ -44,7 +52,7 @@ function AddIncomeModal({ isIncomeModalVisible, handleIncomeModal, onFinish }) {
             },
           ]}
         >
-          <Input type="number" className="custom-input" />
+          <InputNumber type="number" className="custom-input" />
         </Form.Item>
         <Form.Item
           style={{ fontWeight: 600 }}

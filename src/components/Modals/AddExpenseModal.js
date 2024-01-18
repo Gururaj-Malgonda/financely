@@ -1,5 +1,13 @@
 import React from "react";
-import { Button, Modal, DatePicker, Form, Input, Select } from "antd";
+import {
+  Button,
+  Modal,
+  DatePicker,
+  Form,
+  Input,
+  Select,
+  InputNumber,
+} from "antd";
 
 function AddExpenseModal({
   isExpenseModalVisible,
@@ -48,7 +56,8 @@ function AddExpenseModal({
             },
           ]}
         >
-          <Input type="number" className="custom-input" />
+          <InputNumber type="number" className="custom-input" />
+          {/* <InputNumber /> */}
         </Form.Item>
         <Form.Item
           style={{ fontWeight: 600 }}
