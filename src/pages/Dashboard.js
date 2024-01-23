@@ -9,6 +9,7 @@ import { collection, addDoc, query, getDocs } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
 import { db, auth } from "../firebase";
+import Chart from "../components/Charts/Chart";
 
 function Dashboard() {
   const [user] = useAuthState(auth);
@@ -37,7 +38,7 @@ function Dashboard() {
     console.log("On Finish", values, type);
     const newTransaction = {
       type: type,
-      date: moment(values.date).format("YYYY-MM-DD"),
+      date: values.date.format("YYYY-MM-DD"),
       amount: values.amount,
       name: values.name,
       tag: values.tag,
@@ -66,7 +67,7 @@ function Dashboard() {
   useEffect(() => {
     // Get all Docs from a collection
     fetchTransactions();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     calculateBalance();
@@ -105,6 +106,10 @@ function Dashboard() {
     setLoading(false);
   }
 
+  let sortedTransactions = transaction.sort((a, b) => {
+    return new Date(a.date) - new Date(b.date);
+  });
+
   return (
     <div>
       <Header />
@@ -129,6 +134,7 @@ function Dashboard() {
             handleIncomeModal={handleIncomeModal}
             onFinish={onFinish}
           />
+          <Chart sortedTransactions={sortedTransactions} />
           <TransactionTable transaction={transaction} />
         </>
       )}

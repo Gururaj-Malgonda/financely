@@ -83,7 +83,7 @@ function AddIncomeModal({ isIncomeModalVisible, handleIncomeModal, onFinish }) {
             <Select.Option value="Freelance">Freelance</Select.Option>
             <Select.Option value="investment">Invenstment</Select.Option>
             <Select.Option value="trading">Trading</Select.Option>
-            <Select.Option value="morgages">Morgages</Select.Option>
+            <Select.Option value="others">Others</Select.Option>
           </Select>
         </Form.Item>
         <Button className="btn btn-blue" type="primary" htmlType="submit">

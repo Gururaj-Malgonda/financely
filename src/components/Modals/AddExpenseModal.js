@@ -88,7 +88,7 @@ function AddExpenseModal({
             <Select.Option value="education">Education</Select.Option>
             <Select.Option value="shopping">Shopping</Select.Option>
             <Select.Option value="trading">Trading</Select.Option>
-            <Select.Option value="morgages">Morgages</Select.Option>
+            <Select.Option value="others">Others</Select.Option>
           </Select>
         </Form.Item>
         <Button className="btn btn-blue" type="primary" htmlType="submit">
