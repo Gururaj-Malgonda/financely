@@ -57,7 +57,7 @@ function AddIncomeModal({ isIncomeModalVisible, handleIncomeModal, onFinish }) {
         <Form.Item
           style={{ fontWeight: 600 }}
           label="Date"
-          name="date "
+          name="date"
           rules={[
             {
               required: true,

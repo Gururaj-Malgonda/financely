@@ -10,6 +10,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
 import { db, auth } from "../firebase";
 import Chart from "../components/Charts/Chart";
+import NoTransactions from "../components/NoTransaction.js";
 
 function Dashboard() {
   const [user] = useAuthState(auth);
@@ -134,7 +135,13 @@ function Dashboard() {
             handleIncomeModal={handleIncomeModal}
             onFinish={onFinish}
           />
-          <Chart sortedTransactions={sortedTransactions} />
+          {/* <Chart sortedTransactions={sortedTransactions} /> */}
+          {transaction.length === 0 ? (
+            <NoTransactions />
+          ) : (
+            <Chart sortedTransactions={sortedTransactions} />
+          )}
+
           <TransactionTable transaction={transaction} />
         </>
       )}

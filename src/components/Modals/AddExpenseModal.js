@@ -57,7 +57,6 @@ function AddExpenseModal({
           ]}
         >
           <InputNumber type="number" className="custom-input" />
-          {/* <InputNumber /> */}
         </Form.Item>
         <Form.Item
           style={{ fontWeight: 600 }}

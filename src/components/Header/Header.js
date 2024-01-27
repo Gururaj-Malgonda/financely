@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
-import account from "../../assets/account.svg";
+import { UserOutlined } from "@ant-design/icons";
 
 function Header() {
   const [user, loading] = useAuthState(auth);
@@ -42,10 +42,12 @@ function Header() {
               src={user.photoURL}
             />
           ) : (
-            <img
-              style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
-              src={account  }
-            />
+            // <img
+            //   style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
+            //   src={user}
+            // />
+
+            <UserOutlined className="user-icon" />
           )}
           <p className="logo link" onClick={logoutFnc}>
             Logout
