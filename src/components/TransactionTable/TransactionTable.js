@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Button, Flex, Input, Radio, Select, Table } from "antd";
 import "./TransactionTable.css";
 import searchIcon from "../../assets/search.svg";
-import { unparse } from "papaparse";
+import { parse, unparse, parseFLoat } from "papaparse";
+import { toast } from "react-toastify";
 
-function TransactionTable({ transaction }) {
+function TransactionTable({ transaction, addTransaction, fetchTransactions }) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [sortKey, setSortKey] = useState("");
@@ -52,7 +53,7 @@ function TransactionTable({ transaction }) {
     }
   });
 
-  function exportCSV() {
+  function exportToCSV() {
     var csv = unparse({
       fields: ["name", "type", "tag", "date", "amount"],
       data: transaction,
@@ -65,6 +66,31 @@ function TransactionTable({ transaction }) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  function importFromCSV(event) {
+    event.preventDefault();
+    try {
+      parse(event.target.files[0], {
+        header: true,
+        complete: async function (result) {
+          console.log("RESULT>>>", result);
+          for (const transaction of result.data) {
+            console.log("Transactions", transaction);
+            const newTransaction = {
+              ...transaction,
+              amount: parseFLoat(transaction.amount),
+            };
+            await addTransaction(newTransaction, true);
+          }
+        },
+      });
+      toast.success("All transaction Added!");
+      fetchTransactions();
+      event.target.files = null;
+    } catch (e) {
+      toast.error(e.message);
+    }
   }
 
   return (
@@ -108,8 +134,10 @@ function TransactionTable({ transaction }) {
           <Radio.Button value="date">Date</Radio.Button>
         </Radio.Group>
         <Flex gap="small" wrap="wrap">
-          <Button onClick={exportCSV}>Export To CSV</Button>
-          <Button type="primary">Import</Button>
+          <Button onClick={exportToCSV}>Export To CSV</Button>
+          <Button onClick={importFromCSV} type="primary">
+            Import From CSV
+          </Button>
         </Flex>
       </div>
       <div className="table-1">

@@ -75,10 +75,16 @@ function Chart({ sortedTransactions }) {
       </div>
       <div className="chart-spendings chart">
         <h2>Your Spendings</h2>
-        <Pie
-          {...spendingConfig}
-          onReady={(chartInstance) => (pieChart = chartInstance)}
-        />
+        {spendingData.length == 0 ? (
+          <p style={{ height: "400px" }}>
+            Seems like you haven't spent anything till now...
+          </p>
+        ) : (
+          <Pie
+            {...spendingConfig}
+            onReady={(chartInstance) => (pieChart = chartInstance)}
+          />
+        )}
       </div>
     </div>
   );

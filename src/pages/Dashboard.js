@@ -4,7 +4,7 @@ import Cards from "../components/Cards/Cards";
 import AddExpenseModal from "../components/Modals/AddExpenseModal";
 import AddIncomeModal from "../components/Modals/AddIncomeModal";
 import TransactionTable from "../components/TransactionTable/TransactionTable";
-import moment from "moment";
+// import moment from "moment";
 import { collection, addDoc, query, getDocs } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from "react-toastify";
@@ -135,14 +135,17 @@ function Dashboard() {
             handleIncomeModal={handleIncomeModal}
             onFinish={onFinish}
           />
-          {/* <Chart sortedTransactions={sortedTransactions} /> */}
           {transaction.length === 0 ? (
             <NoTransactions />
           ) : (
             <Chart sortedTransactions={sortedTransactions} />
           )}
 
-          <TransactionTable transaction={transaction} />
+          <TransactionTable
+            transaction={transaction}
+            addTransaction={addTransaction}
+            fetchTransactions={fetchTransactions}
+          />
         </>
       )}
     </div>
